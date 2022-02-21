@@ -12,29 +12,33 @@ import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server {
-    private  ServerSocket server;
-    private  Socket socket;
-    private  final int PORT=8189;
-private List<ClientHandler>clients;
+    private ServerSocket server;
+    private Socket socket;
+    private final int PORT = 8189;
+    private List<ClientHandler> clients;
+    private AuthService authService;
 
     public Server() {
 
         clients = new CopyOnWriteArrayList<>();
-        try{
-            server=new ServerSocket(PORT);
+        authService= new SimpleAuthService();
+
+
+
+        try {
+            server = new ServerSocket(PORT);
             System.out.println("Server started");
 
-            while(true) {
+            while (true) {
                 socket = server.accept();
                 System.out.println("Client connected");
-                clients.add(new ClientHandler(this,socket));
+                new ClientHandler(this, socket);
             }
-
 
 
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 socket.close();
             } catch (IOException e) {
@@ -48,9 +52,21 @@ private List<ClientHandler>clients;
         }
     }
 
-    public void broadcastMsg(String msg){
+    public void broadcastMsg(String msg) {
         for (ClientHandler client : clients) {
             client.sendMsg(msg);
         }
+    }
+
+    public void subscribe(ClientHandler clientHandler) {
+        clients.add(clientHandler);
+    }
+
+    public void unsubscribe(ClientHandler clientHandler) {
+        clients.remove(clientHandler);
+    }
+
+    public AuthService getAuthService() {
+        return authService;
     }
 }
