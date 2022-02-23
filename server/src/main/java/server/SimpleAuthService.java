@@ -5,6 +5,7 @@ import java.util.List;
 
 public class SimpleAuthService implements AuthService {
 
+
     private class UserData{
         String login;
         String password;
@@ -26,15 +27,15 @@ private List<UserData>users;
             users.add(new UserData("user"+i,"pass"+i,"nick"+i));
         }
     }
-
     @Override
     public String getNicknameByLoginAndPassword(String login, String password) {
-        for (UserData user : users) {
-            if(user.login.equals(login)&& user.password.equals(password)){
-                return user.nickname;
+        for (UserData u : users) {
+            if(u.login.equals(login)&& u.password.equals(password)){
+                return u.nickname;
             }
         }
 
         return null;
     }
+
 }

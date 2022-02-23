@@ -21,8 +21,7 @@ public class Server {
     public Server() {
 
         clients = new CopyOnWriteArrayList<>();
-        authService= new SimpleAuthService();
-
+        authService = new SimpleAuthService();
 
 
         try {
@@ -52,10 +51,30 @@ public class Server {
         }
     }
 
-    public void broadcastMsg(String msg) {
-        for (ClientHandler client : clients) {
-            client.sendMsg(msg);
+    public void broadcastMsg(ClientHandler sender, String msg) {    ///sender----чтоб знать от кого пришло сообщение
+        String message = String.format("[ %s ]:%s", sender.getNickname(), msg);
+
+
+        for (ClientHandler c : clients) {
+            c.sendMsg(message);
         }
+    }
+
+    public void privateMsg(ClientHandler sender, String receiver, String msg) {    ///sender----чтоб знать от кого пришло сообщение
+        String message = String.format("[ %s ] to [ %s ] :%s", sender.getNickname(), receiver, msg);
+
+
+        for (ClientHandler c : clients) {
+            if (c.getNickname().equals(receiver)) {
+                c.sendMsg(message);
+                if (!c.getNickname().equals(receiver)) {
+                    sender.sendMsg(message);
+                }
+                return;
+            }
+
+        }
+        sender.sendMsg("not found user: "+ receiver);
     }
 
     public void subscribe(ClientHandler clientHandler) {
