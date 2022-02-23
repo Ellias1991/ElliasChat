@@ -8,33 +8,30 @@
 <?import javafx.scene.layout.HBox?>
 <?import java.net.URL?>
 <?import javafx.scene.control.PasswordField?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sam2BorderPane.Controller">
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sam2BorderPane.Controller" alignment="CENTER">
 
-    <stylesheets>
-<URL value ="@/style.css"/>
-    </stylesheets>
-
-<top>
     <HBox fx:id="authPanel">
         <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="login" />
-         <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="password"/>
-        <Button text="auth" onAction="#AuthAttempt"  />
+        <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="password" />
+        <Button text="auth" onAction="#AuthAttempt" />
     </HBox>
 
-</top>
-
-    <center>
-        <TextArea fx:id="textArea" editable="false" />
-
-    </center>
-    <bottom>
-<HBox fx:id="msgPanel" visible="false" managed="false">
-    <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="Type your message here" onAction="#sendMsg"/>
-    <Button text="Send" onAction="#sendMsg" />
+    <stylesheets>
+        <URL value="@/style.css"/>
+    </stylesheets>
 
 
-</HBox>
-    </bottom>
+    <TextArea fx:id="textArea" VBox.vgrow="ALWAYS" editable="false"/>
 
 
-</BorderPane>
+    <HBox fx:id="msgPanel" visible="false" managed="false">
+        <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="Type your message here" onAction="#sendMsg"/>
+        <Button text="Send" onAction="#sendMsg"/>
+
+
+    </HBox>
+
+
+</VBox>

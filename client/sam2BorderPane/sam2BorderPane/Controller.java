@@ -55,7 +55,7 @@ public class Controller implements Initializable {
             nickname = ("");
         }
         textArea.clear();
-
+        setTitle(nickname);
     }
 
 
@@ -96,7 +96,7 @@ public class Controller implements Initializable {
                             if (str.equals("/end")) {
                                 break;
                             }
-                            if (str.startsWith("auth_ok")) {
+                            if (str.startsWith("/auth_ok")) {
                                 nickname = str.split(" ")[1];
                                 setAuthenticated(true);
                                 break;
