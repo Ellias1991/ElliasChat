@@ -13,6 +13,13 @@ public class RegController {
     @FXML public TextField nicknameField;
     @FXML public TextArea textArea;
 
+    private Controller controller;
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
+    @FXML
     public void TryToReg(ActionEvent actionEvent) {
     }
 }

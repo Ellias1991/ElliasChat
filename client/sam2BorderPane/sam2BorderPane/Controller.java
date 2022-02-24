@@ -4,14 +4,19 @@ package sam2BorderPane;
         import javafx.event.ActionEvent;
         import javafx.event.EventHandler;
         import javafx.fxml.FXML;
+        import javafx.fxml.FXMLLoader;
         import javafx.fxml.Initializable;
+        import javafx.scene.Parent;
+        import javafx.scene.Scene;
         import javafx.scene.control.ListView;
         import javafx.scene.control.PasswordField;
         import javafx.scene.control.TextArea;
         import javafx.scene.control.TextField;
         import javafx.scene.input.MouseEvent;
         import javafx.scene.layout.HBox;
+        import javafx.stage.Modality;
         import javafx.stage.Stage;
+        import javafx.stage.StageStyle;
         import javafx.stage.WindowEvent;
 
         import java.io.DataInputStream;
@@ -47,6 +52,8 @@ public class Controller implements Initializable {
     private boolean authenticated;
     private String nickname;
     private Stage stage;
+    private Stage regStage;
+    private RegController regController;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -72,7 +79,7 @@ public class Controller implements Initializable {
             stage = (Stage) textField.getScene().getWindow();
             stage.setOnCloseRequest(event -> {
                 System.out.println("bye");
-                if (socket!=null && !socket.isClosed()){
+                if (socket != null && !socket.isClosed()) {
                     try {
                         out.writeUTF("/end");
                     } catch (IOException e) {
@@ -126,12 +133,12 @@ public class Controller implements Initializable {
 
                                 Platform.runLater(() -> {
                                     clientList.getItems().clear();
-                                    for(int i=1; i<token.length;i++) {
+                                    for (int i = 1; i < token.length; i++) {
                                         clientList.getItems().add(token[i]);
                                     }
                                 });
                             }
-                        }else{
+                        } else {
                             textArea.appendText(str + "\n");
                         }
 
@@ -188,20 +195,43 @@ public class Controller implements Initializable {
 
     private void setTitle(String nickname) {
         String title;
-        if(nickname.equals("")) {
+        if (nickname.equals("")) {
             title = "ElliasChat";
-        }else{
-            title=String.format("ElliasChat [ %s ]",nickname);
+        } else {
+            title = String.format("ElliasChat [ %s ]", nickname);
         }
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             stage.setTitle(title);
         });
     }
 
     public void clientListMouseAction(MouseEvent mouseEvent) {
         System.out.println(clientList.getSelectionModel().getSelectedItem());
-        String receiver= (String) clientList.getSelectionModel().getSelectedItem();
-       textField.setText(String.format("/w %s ",receiver));
+        String receiver = (String) clientList.getSelectionModel().getSelectedItem();
+        textField.setText(String.format("/w %s ", receiver));
+    }
+
+    private void createRegStage() {
+
+        try {
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/reg.fxml"));
+            Parent root = fxmlLoader.load();
+
+            regStage.setTitle("ElliasChat registration");
+            regStage.setScene(new Scene(root, 600, 500));
+
+            regController=fxmlLoader.getController();
+            regController.setController(this);
+
+            regStage.initStyle(StageStyle.UTILITY);//делаем крестик в рег.окне.
+            regStage.initModality(Modality.APPLICATION_MODAL);//пока не закроем верхнее окно РегСтаедж нижнее не будет доступно
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
