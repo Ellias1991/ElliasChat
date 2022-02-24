@@ -13,6 +13,8 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
 
+    private boolean authenticated;
+    private String nickname;
 
     public ClientHandler(Server server, Socket socket) {
 
@@ -25,18 +27,66 @@ public class ClientHandler {
             // копит сообщения,как накопит-он их отправляет.В данном случае сразу просим Автофшалем не копить,а отправлять сообщения.
             new Thread(() -> {
                 try {
+                    //цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
-                        if (str.equals("/end")) {
-                            break;
+
+                        if (str.startsWith("/")) {
+                            if (str.equals("/end")) {
+                                sendMsg("/end");
+                                break;
+                            }
+                            if (str.startsWith("/auth ")) {
+                                String[] token = str.split(" ", 3);
+                                if (token.length < 3) {
+                                    continue;
+
+                                }
+                                String newNick = server.getAuthService().getNicknameByLoginAndPassword(token[1], token[2]);
+                                if (newNick != null) {
+                                    nickname = newNick;
+                                    sendMsg("/auth_ok "+nickname);
+                                    authenticated = true;
+                                    server.subscribe(this);
+                                    break;
+                                } else {
+                                    sendMsg("Логин/пароль неверны");
+                                }
+                            }
                         }
 
-                        server.broadcastMsg(str);
+
+                    }
+
+
+                    //цикл работы
+                    while (authenticated) {
+                        String str = in.readUTF();
+
+                        if (str.startsWith("/")) {
+                            if (str.equals("/end")) {
+                                sendMsg("/end");
+                                break;
+                            }
+                            if (str.startsWith("/w")) {
+                                String[] token = str.split(" ", 3);
+                                if (token.length < 3) {
+                                    continue;
+                                }
+                                server.privateMsg(this, token[1],token[2]);
+                            }
+                        }else{
+                            server.broadcastMsg(this ,str);
+                        }
+
                     }
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
+                    server.unsubscribe(this);
+                    System.out.println("Client disconnected");
+
                     try {
                         socket.close();
                     } catch (IOException e) {
@@ -50,7 +100,7 @@ public class ClientHandler {
         }
     }
 
-    public void sendMsg(String msg){
+    public void sendMsg(String msg) {
         try {
             out.writeUTF(msg);
         } catch (IOException e) {
@@ -58,7 +108,9 @@ public class ClientHandler {
         }
     }
 
-
+    public String getNickname() {
+        return nickname;
+    }
 }
 
 

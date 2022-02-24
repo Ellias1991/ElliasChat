@@ -1,24 +1,38 @@
 package sam2BorderPane;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+        import javafx.application.Platform;
+        import javafx.event.ActionEvent;
+        import javafx.event.EventHandler;
+        import javafx.fxml.FXML;
+        import javafx.fxml.Initializable;
+        import javafx.scene.control.PasswordField;
+        import javafx.scene.control.TextArea;
+        import javafx.scene.control.TextField;
+        import javafx.scene.layout.HBox;
+        import javafx.stage.Stage;
+        import javafx.stage.WindowEvent;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ResourceBundle;
+        import java.io.DataInputStream;
+        import java.io.DataOutputStream;
+        import java.io.IOException;
+        import java.net.Socket;
+        import java.net.URL;
+        import java.net.UnknownHostException;
+        import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     @FXML
     public TextField textField;
     @FXML
     public TextArea textArea;
+    @FXML
+    public PasswordField passwordField;
+    @FXML
+    public TextField loginField;
+    @FXML
+    public HBox authPanel;
+    @FXML
+    public HBox msgPanel;
 
     private Socket socket;
     private static final int PORT = 8189;
@@ -26,25 +40,46 @@ public class Controller implements Initializable {
 
     private DataInputStream in;
     private DataOutputStream out;
+    private boolean authenticated;
+    private String nickname;
+    private Stage stage;
 
-    @FXML
-    public void sendMsg(ActionEvent actionEvent) {
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
+        authPanel.setVisible(!authenticated);
+        authPanel.setManaged(!authenticated);
+        msgPanel.setVisible(authenticated);
+        msgPanel.setManaged(authenticated);
 
-        try {
-            out.writeUTF(textField.getText());//метод отправляет на сервер наше сообщение
-            textField.clear();
-            textField.requestFocus();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!authenticated) {
+            nickname = ("");
         }
-
-
-
+        textArea.clear();
+        setTitle(nickname);
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        Platform.runLater(() -> {
+            stage = (Stage) textField.getScene().getWindow();
+            stage.setOnCloseRequest(event -> {
+                System.out.println("bye");
+                if (socket!=null && !socket.isClosed()){
+                    try {
+                        out.writeUTF("/end");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        });
+        setAuthenticated(false);
+    }
+
+    private void connect() {
+
         try {
             socket = new Socket(ADDRESS, PORT);
             in = new DataInputStream(socket.getInputStream());
@@ -52,7 +87,28 @@ public class Controller implements Initializable {
 
             new Thread(() -> {
                 try {
+
+                    //цикл аутентификации
                     while (true) {
+                        String str = in.readUTF();
+
+                        if (str.startsWith("/")) {
+                            if (str.equals("/end")) {
+                                break;
+                            }
+                            if (str.startsWith("/auth_ok")) {
+                                nickname = str.split(" ")[1];
+                                setAuthenticated(true);
+                                break;
+                            }
+                        } else {
+                            textArea.appendText(str + "\n");
+                        }
+
+                    }
+
+                    //цикл работы
+                    while (authenticated) {
                         String str = in.readUTF();
                         if (str.equals("/end")) {
                             break;
@@ -62,6 +118,8 @@ public class Controller implements Initializable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
+
+                    setAuthenticated(false);
                     try {
                         socket.close();
                     } catch (IOException e) {
@@ -78,7 +136,48 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void sendMsg(ActionEvent actionEvent) {
+
+        try {
+            out.writeUTF(textField.getText());//метод отправляет на сервер наше сообщение
+            textField.clear();
+            textField.requestFocus();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void AuthAttempt(ActionEvent actionEvent) {
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        String msg = String.format("/auth %s %s", loginField.getText().trim(), passwordField.getText().trim());
+        passwordField.clear();
+
+        try {
+            out.writeUTF(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setTitle(String nickname) {
+        String title;
+        if(nickname.equals("")) {
+            title = "ElliasChat";
+        }else{
+            title=String.format("ElliasChat [ %s ]",nickname);
+        }
+        Platform.runLater(()->{
+            stage.setTitle(title);
+        });
+    }
 }
+
 
 
 
