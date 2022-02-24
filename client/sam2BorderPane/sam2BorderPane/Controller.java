@@ -114,6 +114,9 @@ public class Controller implements Initializable {
                                 setAuthenticated(true);
                                 break;
                             }
+                            if(str.equals("/reg_succes")|| str.equals("/reg_failed")){
+                                 regController.result(str);
+                            }
                         } else {
                             textArea.appendText(str + "\n");
                         }
@@ -218,6 +221,8 @@ public class Controller implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/reg.fxml"));
             Parent root = fxmlLoader.load();
 
+            regStage=new Stage();
+
             regStage.setTitle("ElliasChat registration");
             regStage.setScene(new Scene(root, 600, 500));
 
@@ -232,6 +237,30 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
 
+    }
+
+    public void TryToReg(ActionEvent actionEvent) {
+
+        if(regStage==null){
+            createRegStage();
+        }
+
+
+        regStage.show();
+
+    }
+
+    public void registration(String login,String password,String nickname){
+
+        String msg= String.format("/reg %s %s %s", login,password,nickname);
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        try {
+            out.writeUTF(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -21,5 +21,17 @@ public class RegController {
 
     @FXML
     public void TryToReg(ActionEvent actionEvent) {
+        String login= loginField.getText().trim();
+        String password=passwordField.getText().trim();
+        String nickname=nicknameField.getText().trim();
+        controller.registration(login,password,nickname);
+
+    }
+    public void result(String command){
+        if(command.equals("/reg_success")) {
+            textArea.appendText("Регистрация прошла успешно\n");
+        }else {
+            textArea.appendText("Регистрация не прошла успешно\n");
+        }
     }
 }

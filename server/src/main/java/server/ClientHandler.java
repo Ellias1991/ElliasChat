@@ -44,28 +44,41 @@ public class ClientHandler {
 
                                 }
                                 String newNick = server.getAuthService().getNicknameByLoginAndPassword(token[1], token[2]);
-                                login=token[1];
+                                login = token[1];
                                 if (newNick != null) {
-                                    if(!server.isLoginAuthenticated(login)){
-                                    nickname = newNick;
-                                    sendMsg("/auth_ok "+nickname);
-                                    authenticated = true;
-                                    server.subscribe(this);
-                                    break;
-                                } else {
+                                    if (!server.isLoginAuthenticated(login)) {
+                                        nickname = newNick;
+                                        sendMsg("/auth_ok " + nickname);
+                                        authenticated = true;
+                                        server.subscribe(this);
+                                        break;
+                                    } else {
                                         sendMsg("С этой учетки уже выполнен вход");
                                     }
-                                    }else{
+                                } else {
                                     sendMsg("Логин/пароль неверны");
-                                    }
                                 }
                             }
+
+                            if (str.startsWith("/reg ")) {
+                                String[] token = str.split(" ");
+                                if (token.length < 4) {
+                                    continue;
+                                }
+                                if(server.getAuthService().
+                                        registration(token[1],token[2],token[3])) {
+                                sendMsg("/reg success");
+                                }else{
+                                    sendMsg("/reg failed");
+
+
+
+                                }
+
+
+                            }
                         }
-
-
-
-
-
+                    }
                     //цикл работы
                     while (authenticated) {
                         String str = in.readUTF();

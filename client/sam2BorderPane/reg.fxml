@@ -10,6 +10,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
 <VBox xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="sam2BorderPane.RegController" alignment="CENTER">
 
@@ -18,14 +19,16 @@
         <URL value="@/style.css"/>
     </stylesheets>
 
-
+        <Label text="login"/>
         <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="login" />
+         <Label text="password"/>
         <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="password" />
+         <Label text="nickname"/>
         <TextField fx:id="nicknameField" HBox.hgrow="ALWAYS" promptText="nickname" />
     <TextArea fx:id="textArea" VBox.vgrow="ALWAYS" editable="false"/>
 
 
-    <Button text="auth" onAction="#TryToReg" />
+    <Button text="Registration"  HBox.hgrow="ALWAYS" onAction="#TryToReg" />
 
 
 
