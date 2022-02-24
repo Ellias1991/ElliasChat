@@ -15,6 +15,7 @@ public class ClientHandler {
 
     private boolean authenticated;
     private String nickname;
+    private String login;
 
     public ClientHandler(Server server, Socket socket) {
 
@@ -43,20 +44,26 @@ public class ClientHandler {
 
                                 }
                                 String newNick = server.getAuthService().getNicknameByLoginAndPassword(token[1], token[2]);
+                                login=token[1];
                                 if (newNick != null) {
+                                    if(!server.isLoginAuthenticated(login)){
                                     nickname = newNick;
                                     sendMsg("/auth_ok "+nickname);
                                     authenticated = true;
                                     server.subscribe(this);
                                     break;
                                 } else {
+                                        sendMsg("С этой учетки уже выполнен вход");
+                                    }
+                                    }else{
                                     sendMsg("Логин/пароль неверны");
+                                    }
                                 }
                             }
                         }
 
 
-                    }
+
 
 
                     //цикл работы
@@ -110,6 +117,10 @@ public class ClientHandler {
 
     public String getNickname() {
         return nickname;
+    }
+
+    public String getLogin() {
+        return login;
     }
 }
 

@@ -9,6 +9,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ListView?>
 <VBox xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="sam2BorderPane.Controller" alignment="CENTER">
 
@@ -22,8 +23,15 @@
         <URL value="@/style.css"/>
     </stylesheets>
 
+    <HBox VBox.vgrow="ALWAYS">
+        <TextArea fx:id="textArea" HBox.hgrow="ALWAYS" editable="false"/>
+       <ListView fx:id="clientList" managed="false" visible="false" minWidth="150"
+       onMouseReleased="#clientListMouseAction"/>
 
-    <TextArea fx:id="textArea" VBox.vgrow="ALWAYS" editable="false"/>
+    </HBox>
+
+
+
 
 
     <HBox fx:id="msgPanel" visible="false" managed="false">

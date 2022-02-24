@@ -5,9 +5,11 @@ package sam2BorderPane;
         import javafx.event.EventHandler;
         import javafx.fxml.FXML;
         import javafx.fxml.Initializable;
+        import javafx.scene.control.ListView;
         import javafx.scene.control.PasswordField;
         import javafx.scene.control.TextArea;
         import javafx.scene.control.TextField;
+        import javafx.scene.input.MouseEvent;
         import javafx.scene.layout.HBox;
         import javafx.stage.Stage;
         import javafx.stage.WindowEvent;
@@ -33,6 +35,8 @@ public class Controller implements Initializable {
     public HBox authPanel;
     @FXML
     public HBox msgPanel;
+    @FXML
+    public ListView clientList;
 
     private Socket socket;
     private static final int PORT = 8189;
@@ -50,6 +54,8 @@ public class Controller implements Initializable {
         authPanel.setManaged(!authenticated);
         msgPanel.setVisible(authenticated);
         msgPanel.setManaged(authenticated);
+        clientList.setVisible(authenticated);
+        clientList.setManaged(authenticated);
 
         if (!authenticated) {
             nickname = ("");
@@ -110,10 +116,25 @@ public class Controller implements Initializable {
                     //цикл работы
                     while (authenticated) {
                         String str = in.readUTF();
-                        if (str.equals("/end")) {
-                            break;
+
+                        if (str.startsWith("/")) {
+                            if (str.equals("/end")) {
+                                break;
+                            }
+                            if (str.startsWith("/clientlist")) {
+                                String[] token = str.split(" ");
+
+                                Platform.runLater(() -> {
+                                    clientList.getItems().clear();
+                                    for(int i=1; i<token.length;i++) {
+                                        clientList.getItems().add(token[i]);
+                                    }
+                                });
+                            }
+                        }else{
+                            textArea.appendText(str + "\n");
                         }
-                        textArea.appendText(str + "\n");
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -175,6 +196,12 @@ public class Controller implements Initializable {
         Platform.runLater(()->{
             stage.setTitle(title);
         });
+    }
+
+    public void clientListMouseAction(MouseEvent mouseEvent) {
+        System.out.println(clientList.getSelectionModel().getSelectedItem());
+        String receiver= (String) clientList.getSelectionModel().getSelectedItem();
+       textField.setText(String.format("/w %s ",receiver));
     }
 }
 
