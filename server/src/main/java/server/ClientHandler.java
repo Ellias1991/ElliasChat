@@ -87,8 +87,8 @@ public class ClientHandler {
                                 break;
                             }
                             if (str.startsWith("/w")) {
-                                String[] token = str.split(" ", 3);
-                                if (token.length < 3) {
+                                String[] token = str.split(" " );
+                                if (token.length < 4) {
                                     continue;
                                 }
                                 server.privateMsg(this, token[1], token[2]);

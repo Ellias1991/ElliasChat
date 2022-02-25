@@ -111,7 +111,7 @@ public class Controller implements Initializable {
                                 break;
                             }
                             if (str.startsWith("/auth_ok")) {
-                                nickname = str.split(" ")[1];
+                                nickname = str.split(" ")[0];
                                 setAuthenticated(true);
                                 break;
                             }
