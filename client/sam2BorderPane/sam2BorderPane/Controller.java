@@ -107,10 +107,10 @@ public class Controller implements Initializable {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals("/end")) {
+                            if (str.equals(Command.END)) {
                                 break;
                             }
-                            if (str.startsWith("/auth_ok")) {
+                            if (str.startsWith(Command.AUTH_OK)) {
                                 nickname = str.split(" ")[0];
                                 setAuthenticated(true);
                                 break;
@@ -129,7 +129,7 @@ public class Controller implements Initializable {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals("/end")) {
+                            if (str.equals(Command.END)) {
                                 break;
                             }
                             if (str.startsWith("/clientlist")) {

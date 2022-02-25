@@ -36,11 +36,11 @@ public class ClientHandler {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals("/end")) {
-                                sendMsg("/end");
+                            if (str.equals(Command.END)) {
+                                sendMsg(Command.END);
                                 break;
                             }
-                            if (str.startsWith("/auth")) {
+                            if (str.startsWith(Command.AUTH)) {
                                 String[] token = str.split(" ", 3);
                                 if (token.length < 3) {
                                     continue;
@@ -51,7 +51,7 @@ public class ClientHandler {
                                 if (newNick != null) {
                                     if (!server.isLoginAuthenticated(login)) {
                                         nickname = newNick;
-                                        sendMsg("/auth_ok" + nickname);
+                                        sendMsg(Command.AUTH_OK + nickname);
                                         authenticated = true;
                                         server.subscribe(this);
                                         break;
@@ -82,8 +82,8 @@ public class ClientHandler {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals("/end")) {
-                                sendMsg("/end");
+                            if (str.equals(Command.END)) {
+                                sendMsg(Command.END);
                                 break;
                             }
                             if (str.startsWith("/w")) {
