@@ -1,5 +1,6 @@
 package server;
 
+import constants.Command;
 import sun.management.snmp.jvmmib.EnumJvmThreadCpuTimeMonitoring;
 
 import java.io.DataInputStream;
@@ -28,6 +29,8 @@ public class ClientHandler {
             // копит сообщения,как накопит-он их отправляет.В данном случае сразу просим Автофшалем не копить,а отправлять сообщения.
             new Thread(() -> {
                 try {
+
+
                     //цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
@@ -37,7 +40,7 @@ public class ClientHandler {
                                 sendMsg("/end");
                                 break;
                             }
-                            if (str.startsWith("/auth ")) {
+                            if (str.startsWith("/auth")) {
                                 String[] token = str.split(" ", 3);
                                 if (token.length < 3) {
                                     continue;
@@ -48,7 +51,7 @@ public class ClientHandler {
                                 if (newNick != null) {
                                     if (!server.isLoginAuthenticated(login)) {
                                         nickname = newNick;
-                                        sendMsg("/auth_ok " + nickname);
+                                        sendMsg("/auth_ok" + nickname);
                                         authenticated = true;
                                         server.subscribe(this);
                                         break;
@@ -65,17 +68,12 @@ public class ClientHandler {
                                 if (token.length < 4) {
                                     continue;
                                 }
-                                if(server.getAuthService().
-                                        registration(token[1],token[2],token[3])) {
-                                sendMsg("/reg success");
-                                }else{
+                                if (server.getAuthService().
+                                        registration(token[1], token[2], token[3])) {
+                                    sendMsg("/reg success");
+                                } else {
                                     sendMsg("/reg failed");
-
-
-
                                 }
-
-
                             }
                         }
                     }
@@ -93,14 +91,14 @@ public class ClientHandler {
                                 if (token.length < 3) {
                                     continue;
                                 }
-                                server.privateMsg(this, token[1],token[2]);
+                                server.privateMsg(this, token[1], token[2]);
                             }
-                        }else{
-                            server.broadcastMsg(this ,str);
+                        } else {
+                            server.broadcastMsg(this, str);
                         }
 
                     }
-
+                    //SocketTimeOutException-обработать
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {

@@ -1,5 +1,6 @@
 package sam2BorderPane;
 
+        import constants.Command;
         import javafx.application.Platform;
         import javafx.event.ActionEvent;
         import javafx.event.EventHandler;
@@ -81,7 +82,7 @@ public class Controller implements Initializable {
                 System.out.println("bye");
                 if (socket != null && !socket.isClosed()) {
                     try {
-                        out.writeUTF("/end");
+                        out.writeUTF(Command.END);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
