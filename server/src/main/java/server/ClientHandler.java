@@ -7,6 +7,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 public class ClientHandler {
     private Server server;
@@ -30,6 +32,7 @@ public class ClientHandler {
             new Thread(() -> {
                 try {
 
+                    socket.setSoTimeout(120000);
 
                     //цикл аутентификации
                     while (true) {
@@ -44,8 +47,8 @@ public class ClientHandler {
                                 String[] token = str.split(" ", 3);
                                 if (token.length < 3) {
                                     continue;
-
                                 }
+
                                 String newNick = server.getAuthService().getNicknameByLoginAndPassword(token[1], token[2]);
                                 login = token[1];
                                 if (newNick != null) {
@@ -87,7 +90,7 @@ public class ClientHandler {
                                 break;
                             }
                             if (str.startsWith("/w")) {
-                                String[] token = str.split(" ",3 );
+                                String[] token = str.split(" ", 3);
                                 if (token.length < 3) {
                                     continue;
                                 }
@@ -98,7 +101,14 @@ public class ClientHandler {
                         }
 
                     }
-                    //SocketTimeOutException-обработать
+                } catch (SocketTimeoutException e) {
+                    System.out.println("Время подключения истекло");
+                    try {
+                        socket.setSoTimeout(0);
+                    } catch (SocketException ex) {
+                        ex.printStackTrace();
+                    }
+                    sendMsg(Command.END);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
