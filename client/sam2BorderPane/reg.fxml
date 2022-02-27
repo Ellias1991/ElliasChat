@@ -10,40 +10,27 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
 <VBox xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="sam2BorderPane.Controller" alignment="CENTER">
+      fx:controller="sam2BorderPane.RegController" alignment="CENTER">
+
 
     <stylesheets>
         <URL value="@/style.css"/>
     </stylesheets>
 
-
-    <HBox fx:id="authPanel">
+        <Label text="login"/>
         <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="login" />
+         <Label text="password"/>
         <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="password" />
-        <Button text="auth" onAction="#AuthAttempt" />
-        <Button text="reg" onAction="#TryToReg" />
-    </HBox>
+         <Label text="nickname"/>
+        <TextField fx:id="nicknameField" HBox.hgrow="ALWAYS" promptText="nickname" />
+    <TextArea fx:id="textArea" VBox.vgrow="ALWAYS" editable="false"/>
 
 
-
-    <HBox VBox.vgrow="ALWAYS">
-        <TextArea fx:id="textArea" HBox.hgrow="ALWAYS" editable="false"/>
-       <ListView fx:id="clientList" managed="false" visible="false" minWidth="150"
-       onMouseReleased="#clientListMouseAction"/>
-
-    </HBox>
+    <Button text="Registration"  HBox.hgrow="ALWAYS" onAction="#TryToReg" />
 
 
-
-
-
-    <HBox fx:id="msgPanel" visible="false" managed="false">
-        <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="Type your message here" onAction="#sendMsg"/>
-        <Button text="Send" onAction="#sendMsg"/>
-
-
-    </HBox>
 
 
 </VBox>
