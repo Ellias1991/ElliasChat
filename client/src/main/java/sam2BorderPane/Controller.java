@@ -1,9 +1,8 @@
 package sam2BorderPane;
 
-        import constants.Command;
+
         import javafx.application.Platform;
         import javafx.event.ActionEvent;
-        import javafx.event.EventHandler;
         import javafx.fxml.FXML;
         import javafx.fxml.FXMLLoader;
         import javafx.fxml.Initializable;
@@ -18,7 +17,6 @@ package sam2BorderPane;
         import javafx.stage.Modality;
         import javafx.stage.Stage;
         import javafx.stage.StageStyle;
-        import javafx.stage.WindowEvent;
 
         import java.io.DataInputStream;
         import java.io.DataOutputStream;
@@ -82,7 +80,7 @@ public class Controller implements Initializable {
                 System.out.println("bye");
                 if (socket != null && !socket.isClosed()) {
                     try {
-                        out.writeUTF(Command.END);
+                        out.writeUTF("/end");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -107,10 +105,10 @@ public class Controller implements Initializable {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals(Command.END)) {
+                            if (str.equals("/end")) {
                                 break;
                             }
-                            if (str.startsWith(Command.AUTH_OK)) {
+                            if (str.startsWith("/auth_ok")) {
                                 nickname = str.split(" ")[0];
                                 setAuthenticated(true);
                                 break;
@@ -129,7 +127,7 @@ public class Controller implements Initializable {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals(Command.END)) {
+                            if (str.equals("/end")) {
                                 break;
                             }
                             if (str.startsWith("/clientlist")) {
