@@ -1,6 +1,6 @@
 package server;
 
-import constants.Command;
+
 import sun.management.snmp.jvmmib.EnumJvmThreadCpuTimeMonitoring;
 
 import java.io.DataInputStream;
@@ -39,11 +39,11 @@ public class ClientHandler {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals(Command.END)) {
-                                sendMsg(Command.END);
+                            if (str.equals("/end")) {
+                                sendMsg("/end");
                                 break;
                             }
-                            if (str.startsWith(Command.AUTH)) {
+                            if (str.startsWith("/auth")) {
                                 String[] token = str.split(" ", 3);
                                 if (token.length < 3) {
                                     continue;
@@ -54,7 +54,7 @@ public class ClientHandler {
                                 if (newNick != null) {
                                     if (!server.isLoginAuthenticated(login)) {
                                         nickname = newNick;
-                                        sendMsg(Command.AUTH_OK + nickname);
+                                        sendMsg("/auth_ok" + nickname);
                                         authenticated = true;
                                         server.subscribe(this);
                                         break;
@@ -85,8 +85,8 @@ public class ClientHandler {
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
-                            if (str.equals(Command.END)) {
-                                sendMsg(Command.END);
+                            if (str.equals("/end")) {
+                                sendMsg("/end");
                                 break;
                             }
                             if (str.startsWith("/w")) {
@@ -108,7 +108,7 @@ public class ClientHandler {
                     } catch (SocketException ex) {
                         ex.printStackTrace();
                     }
-                    sendMsg(Command.END);
+                    sendMsg("/end");
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
