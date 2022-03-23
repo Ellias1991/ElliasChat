@@ -12,11 +12,7 @@ public class UserDataBase implements AuthService {
 
     public static void main(String[] args)  {
 
-        try {
-            WorkWithBase();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
 
 
     }
@@ -65,10 +61,7 @@ public class UserDataBase implements AuthService {
             return false;
         }
 
-        public static void WorkWithBase()throws SQLException {
-            stmt.executeUpdate("INSERT INTO Users (nickname, age) VALUES ('Jenya',30);");
 
-        }
     }
 
 
