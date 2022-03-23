@@ -2,7 +2,7 @@ package server;
 
 
 
-import sun.management.snmp.jvmmib.EnumJvmThreadCpuTimeMonitoring;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -116,11 +116,13 @@ public class ClientHandler {
                     server.unsubscribe(this);
                     System.out.println("Client disconnected");
 
-                    try {
+                    try{
+                        UserDataBase.disconnect();
                         socket.close();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                 }
             }).start();
 
