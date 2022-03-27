@@ -13,8 +13,8 @@ public interface AuthService {
      */
     boolean registration(String login,String password,String nickname);
 
-    static void WorkWithBase() {
+    boolean changeNick(String oldNickname, String newNickname);
 
     }
-    }
+
 
