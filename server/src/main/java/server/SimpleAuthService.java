@@ -51,4 +51,9 @@ private List<UserData>users;
 
         return true;
     }
+
+    @Override
+    public boolean changeNick(String oldNickname, String newNickname) {
+        return false;
+    }
 }

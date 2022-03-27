@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -21,18 +22,16 @@ public class Server {
     public Server() {
 
         clients = new CopyOnWriteArrayList<>();
-        authService = new AuthService() {
-            @Override
-            public String getNicknameByLoginAndPassword(String login, String password) {
-                return null;
-            }
+        authService = new SimpleAuthService();
 
-            @Override
-            public boolean registration(String login, String password, String nickname) {
-                return false;
+        try {
+            if (!SQLUserDataBase.connect()) {
+                throw new RuntimeException("Не удалось подключиться к БД");
             }
-        };
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        authService = new SQLAuthService();
 
         try {
             server = new ServerSocket(PORT);
