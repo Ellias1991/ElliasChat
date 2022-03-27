@@ -25,7 +25,7 @@ public class Main extends Application {
     public static void main(String[] args) throws IOException {
         launch(args);
 
-        File file = new File("user1/history_Ellias.txt");
+      /*  File file = new File("user1/history_Ellias.txt");
         InputStreamReader in1 = new InputStreamReader(new FileInputStream("user1/history_Ellias.txt"), StandardCharsets.UTF_8);
         int x;
         while ((x = in1.read()) >= 0) {
@@ -52,6 +52,6 @@ public class Main extends Application {
         System.out.println(Files.readAllLines(Paths.get("user2/history_Misto.txt")));
         System.out.println(Files.readAllLines(Paths.get("user3/history_Tuman.txt")));
 
-
+*/
     }
 }
