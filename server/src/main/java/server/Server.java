@@ -21,7 +21,17 @@ public class Server {
     public Server() {
 
         clients = new CopyOnWriteArrayList<>();
-        authService = new SimpleAuthService();
+        authService = new AuthService() {
+            @Override
+            public String getNicknameByLoginAndPassword(String login, String password) {
+                return null;
+            }
+
+            @Override
+            public boolean registration(String login, String password, String nickname) {
+                return false;
+            }
+        };
 
 
         try {

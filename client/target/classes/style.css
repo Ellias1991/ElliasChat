@@ -1,0 +1,18 @@
+.root{
+-fx-font-size:14;
+
+}
+
+.button{
+-fx-background-color: chartreuse;
+
+}
+.button:hover{
+-fx-font-size:15;
+-fx-font-weight:bold;
+}
+.text-area{
+-fx-control-inner-background: green;
+-fx-text-fill: yellow;
+
+}
