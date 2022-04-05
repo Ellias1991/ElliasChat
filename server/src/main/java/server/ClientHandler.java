@@ -30,7 +30,8 @@ public class ClientHandler {
             // то при помощи чего слушать сообщения,передается инф.в сокет
             out = new DataOutputStream(socket.getOutputStream());//надо записывать исходящий канал.использует буфер,
             // копит сообщения,как накопит-он их отправляет.В данном случае сразу просим Автофшалем не копить,а отправлять сообщения.
-            new Thread(() -> {
+            //new Thread(() -> {
+                server.getExecutorService().execute(() -> {
                 try {
 
                     socket.setSoTimeout(120000);
@@ -124,7 +125,7 @@ public class ClientHandler {
                     }
 
                 }
-            }).start();
+            });
 
         } catch (IOException e) {
             e.printStackTrace();
