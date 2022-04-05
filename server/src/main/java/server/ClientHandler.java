@@ -117,7 +117,7 @@ public class ClientHandler {
                     System.out.println("Client disconnected");
 
                     try{
-                        UserDataBase.disconnect();
+                        SQLUserDataBase.disconnect();
                         socket.close();
                     } catch (Exception e) {
                         e.printStackTrace();
